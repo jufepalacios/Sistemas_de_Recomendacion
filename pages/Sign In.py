@@ -3,6 +3,7 @@ import sqlite3
 from datetime import date
 import pandas as pd
 import predictions as p
+import threading
 
 conn = sqlite3.connect('data.db')
 cur = conn.cursor()
@@ -139,7 +140,9 @@ if signin_button:
 		df_vis = df_new_user[['Usuario','Genero','Edad','País','Fecha Registro']]
 		
 		df_preferences = get_all_preferences()
-		p.train_model(df_preferences)
+		thread = threading.Thread(target=p.train_model, args=(df_preferences,))
+		thread.start()
+		#p.train_model(df_preferences)
 
 		st.markdown("# :bust_in_silhouette: Bienvenido, {}".format(username))
 		st.markdown("Información del nuevo usuario:")
